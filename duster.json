@@ -1,7 +1,8 @@
 {
     "scripts": {
         "lint": {
-            "phpstan": ["./vendor/bin/phpstan", "analyse"]
+            "phpstan": ["./vendor/bin/phpstan", "analyse"],
+            "pest": ["./vendor/bin/pest", "--parallel"]
         }
     },
     "processTimeout": 120
