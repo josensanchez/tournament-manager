@@ -2,14 +2,19 @@
 
 namespace App\Models\States;
 
+use App\Models\States\Tournament\Created;
+use App\Models\States\Tournament\InProgress;
+use App\Models\States\Tournament\Ready;
+use App\Models\States\Tournament\Registering;
+use App\Models\Tournament;
 use Spatie\ModelStates\State;
 use Spatie\ModelStates\StateConfig;
-use App\Models\States\Tournament\{Created, Registering, Ready, InProgress};
 
+/**
+ * @extends State<Tournament>
+ */
 class TournamentState extends State
 {
-
-
     public static function config(): StateConfig
     {
         return parent::config()

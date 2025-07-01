@@ -23,19 +23,19 @@ class InstallPreCommit extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $this->info('Installing pre-commit hooks...');
 
         $hooks = [
-            'pre-commit' => 'sail bin duster',
+            'pre-commit' => './vendor/bin/sail bin duster lint',
         ];
 
         foreach ($hooks as $hook => $command) {
             $hookPath = base_path('.git/hooks/' . $hook);
-            file_put_contents($hookPath, "#!/bin/sh\n$command\n");
+            file_put_contents($hookPath, "#!/bin/sh\n{$command}\n");
             chmod($hookPath, 0755);
-            $this->info("Installed $hook hook.");
+            $this->info("Installed {$hook} hook.");
         }
 
         $this->info('Pre-commit hooks installed successfully.');
