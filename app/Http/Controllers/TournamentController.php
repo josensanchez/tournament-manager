@@ -66,10 +66,8 @@ class TournamentController extends Controller
         ]);
 
         // Transition the state
-        if (! is_string($tournament->state)) {
-            // @phpstan-ignore method.nonObject
-            $tournament->state->transitionTo($request->input('state'));
-        }
+        // @phpstan-ignore method.nonObject
+        $tournament->state->transitionTo($request->input('state'));
 
         // Save the tournament
         $tournament->save();
