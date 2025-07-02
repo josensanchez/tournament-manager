@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('first_player_id')->constrained('players');
             $table->foreignId('second_player_id')->constrained('players');
+            $table->foreignId('tournament_id');
             $table->string('score')->nullable();
             $table->string('state');
             $table->timestamps();

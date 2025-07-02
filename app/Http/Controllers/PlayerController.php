@@ -22,6 +22,10 @@ class PlayerController extends Controller
      */
     public function store(Request $request, Tournament $tournament): JsonResponse
     {
+        // chek if the tournament is in a state that allows players to be added
+        if (! $tournament->canAddPlayers()) {
+            return response()->json(['error' => 'Cannot add players to this tournament state'], 403);
+        }
         // @phpstan-ignore argument.type
         $player = $tournament->players()->create($request->all());
 

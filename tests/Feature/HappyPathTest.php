@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\States\Tournament\Created;
+use App\Models\States\Tournament\InProgress;
 use App\Models\States\Tournament\Ready;
 use App\Models\States\Tournament\Registering;
 use App\Models\Tournament;
@@ -47,4 +48,25 @@ test('tournament happy path', function () {
     $response->assertStatus(200);
     $tournament->refresh();
     expect($tournament->state::$name)->toEqual(Ready::$name);
+
+    // 5. Move the tournament to InProgress and Generate matches
+    $response = $this->patchJson("/api/tournaments/{$tournament->id}", [
+        'state' => 'In Progress',
+    ]);
+    $response->assertStatus(200);
+    $tournament->refresh();
+    expect($tournament->state::$name)->toEqual(InProgress::$name);
+    expect($tournament->matches)->toHaveCount(2); // 4 players should generate 2 matches
+
+    // 6. Move Matches to Finished state and check that the final match is generated
+    foreach ($tournament->matches as $match) {
+        $response = $this->patchJson("/api/tournaments/{$tournament->id}/match/{$match->id}", [
+            'state' => 'In Progress',
+        ]);
+        $response->assertStatus(200);
+        $response = $this->patchJson("/api/tournaments/{$tournament->id}/match/{$match->id}", [
+            'state' => 'Finished',
+        ]);
+        $response->assertStatus(200);
+    }
 });
