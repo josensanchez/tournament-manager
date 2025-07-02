@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\States\Player\Registered;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class PlayerFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'state' => Registered::class,
             'email' => $this->faker->unique()->safeEmail(),
         ];
     }

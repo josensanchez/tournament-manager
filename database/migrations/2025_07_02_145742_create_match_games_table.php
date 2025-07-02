@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('players', function (Blueprint $table) {
+        Schema::create('match_games', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->foreignId('tournament_id');
+            $table->foreignId('first_player_id')->constrained('players');
+            $table->foreignId('second_player_id')->constrained('players');
+            $table->string('score')->nullable();
             $table->string('state');
             $table->timestamps();
         });
@@ -20,6 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('players');
+        Schema::dropIfExists('match_games');
     }
 };

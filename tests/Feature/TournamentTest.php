@@ -48,5 +48,9 @@ describe('Tournaments', function () {
         $response = $this->patch("/api/tournaments/{$tournament->id}", ['state' => 'Ready']);
 
         $response->assertOk();
+        expect($response->content())
+            ->json()
+            ->message->toBe('Tournament state updated successfully')
+            ->data->state->toBe('Ready');
     });
 });

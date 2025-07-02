@@ -21,12 +21,6 @@ class TournamentTransitionRequest extends FormRequest
      */
     public function rules(): array
     {
-        // $state = $this->input('state');
-        // if ($state === 'Ready') {
-        //     return [
-        //         'name' => 'required|string|max:255',
-        //     ];
-        // }
         return [
             'state' => 'required|string|in:Created,Registering,Ready',
         ];

@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TournamentTransitionRequest;
 use App\Models\Tournament;
 use App\Services\TournamentService;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Spatie\ModelStates\Exceptions\TransitionNotFound;
 
 class TournamentController extends Controller
 {
@@ -21,7 +19,7 @@ class TournamentController extends Controller
         $tournaments = Tournament::paginate();
 
         // Return the view with tournaments data
-        return response()->json($tournaments);
+        return response()->json($tournaments, 200);
     }
 
     /**
@@ -61,25 +59,13 @@ class TournamentController extends Controller
      */
     public function transitionState(TournamentService $service, TournamentTransitionRequest $request, Tournament $tournament): JsonResponse
     {
-        try {
-            /** @var string $state */
-            $state = $request->validated()['state'];
-            $tournament = $service->transitionTo($state, $tournament);
-        } catch (TransitionNotFound $tnf) {
-            return response()->json([
-                'error' => 'Invalid state transition', // @pest-mutate-ignore
-                'message' => $tnf->getMessage(), // @pest-mutate-ignore
-            ], 422);
-        } catch (Exception $e) {
-            return response()->json([
-                'error' => 'An error occurred while transitioning the tournament state', // @pest-mutate-ignore
-                'message' => $e->getMessage(), // @pest-mutate-ignore
-            ], 422);
-        }
+        /** @var string $state */
+        $state = $request->validated()['state'];
+        $tournament = $service->transitionTo($state, $tournament);
 
         return response()->json([
-            'data' => $tournament, // @pest-mutate-ignore
-            'message' => 'Tournament state updated successfully', // @pest-mutate-ignore
+            'data' => $tournament,
+            'message' => 'Tournament state updated successfully',
         ]);
     }
 }
