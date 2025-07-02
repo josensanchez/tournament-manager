@@ -19,7 +19,7 @@ class TournamentController extends Controller
         $tournaments = Tournament::paginate();
 
         // Return the view with tournaments data
-        return response()->json($tournaments, 200);
+        return response()->json($tournaments);
     }
 
     /**
