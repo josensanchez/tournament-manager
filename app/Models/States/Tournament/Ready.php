@@ -2,12 +2,7 @@
 
 namespace App\Models\States\Tournament;
 
-use App\Models\States\TournamentState;
-
 class Ready extends TournamentState
 {
-    public static function name(): string
-    {
-        return 'Ready';
-    }
+    public static string $name = 'Ready';
 }

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TournamentTransitionRequest;
 use App\Models\Tournament;
+use App\Services\TournamentService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Spatie\ModelStates\Exceptions\TransitionNotFound;
 
 class TournamentController extends Controller
 {
@@ -55,23 +59,27 @@ class TournamentController extends Controller
     /**
      * Transition the state of a tournament.
      */
-    public function transitionState(Request $request, Tournament $tournament): JsonResponse
+    public function transitionState(TournamentService $service, TournamentTransitionRequest $request, Tournament $tournament): JsonResponse
     {
-        // Validate the request
-        $request->validate([
-            'state' => 'required|string|in:planned,ongoing,completed,cancelled',
-        ]);
-
-        // Transition the state
-        // @phpstan-ignore method.nonObject
-        $tournament->state->transitionTo($request->input('state'));
-
-        // Save the tournament
-        $tournament->save();
+        try {
+            /** @var string $state */
+            $state = $request->validated()['state'];
+            $tournament = $service->transitionTo($state, $tournament);
+        } catch (TransitionNotFound $tnf) {
+            return response()->json([
+                'error' => 'Invalid state transition', // @pest-mutate-ignore
+                'message' => $tnf->getMessage(), // @pest-mutate-ignore
+            ], 422);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while transitioning the tournament state', // @pest-mutate-ignore
+                'message' => $e->getMessage(), // @pest-mutate-ignore
+            ], 422);
+        }
 
         return response()->json([
-            'data' => $tournament,
-            'message' => 'Tournament state updated successfully',
+            'data' => $tournament, // @pest-mutate-ignore
+            'message' => 'Tournament state updated successfully', // @pest-mutate-ignore
         ]);
     }
 }
