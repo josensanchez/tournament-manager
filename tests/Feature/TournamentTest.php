@@ -15,12 +15,26 @@ describe('Tournaments', function () {
             ->data->toHaveCount(15);
     });
 
+    it('should create a tournament', function () {
+        $tournamentData = [
+            'name' => 'Test Tournament',
+            'gender' => 'male',
+            'start_date' => '2025-08-01',
+        ];
+
+        $response = $this->post('/api/tournaments', $tournamentData);
+        $response->assertStatus(201);
+        expect($response->content())
+            ->json()
+            ->name->toBe('Test Tournament');
+    });
+
     it('should transition tournament from created to registering', function () {
         $tournament = Tournament::factory()->create();
 
         $response = $this->patch("/api/tournaments/{$tournament->id}", ['state' => 'Registering']);
 
-        $response->assertOk();
+        $response->assertStatus(200);
     });
 
     it('should not move from created to ready', function () {
