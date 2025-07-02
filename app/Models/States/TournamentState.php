@@ -13,11 +13,12 @@ use Spatie\ModelStates\StateConfig;
 /**
  * @extends State<Tournament>
  */
-class TournamentState extends State
+abstract class TournamentState extends State
 {
     public static function config(): StateConfig
     {
         return parent::config()
+            ->registerState(Created::class)
             ->default(Created::class)
             ->allowTransition(Created::class, Registering::class)
             ->allowTransition(Registering::class, Ready::class)

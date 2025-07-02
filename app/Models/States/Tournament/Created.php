@@ -6,8 +6,5 @@ use App\Models\States\TournamentState;
 
 class Created extends TournamentState
 {
-    public static function name(): string
-    {
-        return 'created';
-    }
+    public static string $name = 'Created';
 }

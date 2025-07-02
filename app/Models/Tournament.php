@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\States\TournamentState;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\HasStates;
 
 class Tournament extends Model
 {
-    use HasStates;
+    /** @use HasFactory<\Database\Factories\TournamentFactory> */
+    use HasFactory, HasStates;
 
     protected $fillable = [
         'name',
