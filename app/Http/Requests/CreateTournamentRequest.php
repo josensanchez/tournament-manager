@@ -2,13 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\States\Tournament\Created;
-use App\Models\States\Tournament\InProgress;
-use App\Models\States\Tournament\Ready;
-use App\Models\States\Tournament\Registering;
 use Illuminate\Foundation\Http\FormRequest;
 
-class TournamentTransitionRequest extends FormRequest
+class CreateTournamentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +22,10 @@ class TournamentTransitionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'state' => 'required|string|in:' . Created::$name . ',' . Registering::$name . ',' . Ready::$name . ',' . InProgress::$name,
+            'name' => ['required', 'string', 'max:255'],
+            'gender' => ['required', 'string', 'in:male,female,mixed'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['sometimes', 'date'],
         ];
     }
 }

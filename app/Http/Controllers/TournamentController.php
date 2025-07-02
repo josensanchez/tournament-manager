@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateTournamentRequest;
 use App\Http\Requests\TournamentTransitionRequest;
 use App\Models\Tournament;
 use App\Services\TournamentService;
@@ -25,9 +26,11 @@ class TournamentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): void
+    public function store(CreateTournamentRequest $request): JsonResponse
     {
-        //
+        $tournament = Tournament::create($request->validated());
+
+        return response()->json($tournament, 201);
     }
 
     /**

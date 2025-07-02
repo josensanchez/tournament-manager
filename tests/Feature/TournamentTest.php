@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\TournamentController;
 use App\Models\Tournament;
 
-covers(App\Http\Controllers\TournamentController::class);
+covers(TournamentController::class);
 
 describe('Tournaments', function () {
     it('get all tournaments', function () {

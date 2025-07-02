@@ -19,7 +19,7 @@ class Tournament extends Model implements Auditable
         'name',
         'start_date',
         'end_date',
-        'location',
+        'gender',
         'state',
     ];
 
