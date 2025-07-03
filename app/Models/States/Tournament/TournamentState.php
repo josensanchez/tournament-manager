@@ -19,6 +19,7 @@ abstract class TournamentState extends State
             ->default(Created::class)
             ->allowTransition(Created::class, Registering::class)
             ->allowTransition(Registering::class, Ready::class, ToReady::class)
-            ->allowTransition(Ready::class, InProgress::class, ToInProgress::class);
+            ->allowTransition(Ready::class, InProgress::class, ToInProgress::class)
+            ->allowTransition(InProgress::class, TournamentFinished::class);
     }
 }

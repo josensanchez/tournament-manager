@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\States\Match;
+namespace App\Models\States\MatchGame;
 
 class InProgress extends MatchState
 {

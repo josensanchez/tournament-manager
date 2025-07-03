@@ -16,6 +16,7 @@ abstract class PlayerState extends State
         return parent::config()
             ->default(Registered::class)
             ->allowTransition(Registered::class, Playing::class)
+            ->allowTransition(Playing::class, Playing::class)
             ->allowTransition(Playing::class, Eliminated::class)
             ->allowTransition(Playing::class, Winner::class);
     }

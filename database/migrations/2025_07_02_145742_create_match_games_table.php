@@ -10,11 +10,13 @@ return new class extends Migration
     {
         Schema::create('match_games', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('first_player_id')->constrained('players');
-            $table->foreignId('second_player_id')->constrained('players');
+            $table->foreignId('first_player_id')->constrained('players')->nullable();
+            $table->foreignId('second_player_id')->constrained('players')->nullable();
+            $table->foreignId('winner_id')->nullable();
             $table->foreignId('tournament_id');
             $table->string('score')->nullable();
             $table->string('state');
+            $table->integer('stage');
             $table->timestamps();
         });
     }

@@ -30,7 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 422);
             }
 
-            dd($e);
+            dd($e, $e->getMessage());
 
             return response()->json([
                 'error' => 'An error occurred while processing your request',

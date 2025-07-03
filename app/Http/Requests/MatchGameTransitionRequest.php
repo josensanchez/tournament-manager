@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Models\States\Match\Finished;
-use App\Models\States\Match\InProgress;
+use App\Models\States\MatchGame\Finished;
+use App\Models\States\MatchGame\InProgress;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
  * Class MatchGameTransitionRequest
  *
  * @property string $state
- * @property int|null $score
+ * @property array<int,string>|null $score
  */
 class MatchGameTransitionRequest extends FormRequest
 {
@@ -32,7 +32,8 @@ class MatchGameTransitionRequest extends FormRequest
     {
         return [
             'state' => ['required', 'string', Rule::in([InProgress::$name, Finished::$name])],
-            'score' => ['sometimes', 'required_if:state,' . Finished::$name . '', 'integer', 'min:0'],
+            'score' => ['required_if:state,' . Finished::$name, 'array', 'min:3', 'max:5'],
+            'score.*' => ['required', 'string', 'regex:/([0-7]+)\-([0-7]+)/'],
         ];
     }
 }

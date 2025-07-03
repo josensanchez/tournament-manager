@@ -67,12 +67,14 @@ class Tournament extends Model implements Auditable
         }
 
         $players = $this->players->shuffle();
+        $count = $players->count();
 
-        for ($i = 0; $i < $players->count(); $i += 2) {
+        for ($i = 0; $i < $count; $i += 2) {
 
             $this->matches()->create([
                 'first_player_id' => $players[$i]->id, // @phpstan-ignore property.nonObject
                 'second_player_id' => $players[$i + 1]->id, // @phpstan-ignore property.nonObject
+                'stage' => $count,
             ]);
         }
 

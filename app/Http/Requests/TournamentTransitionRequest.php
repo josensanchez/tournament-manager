@@ -7,6 +7,7 @@ use App\Models\States\Tournament\InProgress;
 use App\Models\States\Tournament\Ready;
 use App\Models\States\Tournament\Registering;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class TournamentTransitionRequest extends FormRequest
 {
@@ -26,7 +27,7 @@ class TournamentTransitionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'state' => 'required|string|in:' . Created::$name . ',' . Registering::$name . ',' . Ready::$name . ',' . InProgress::$name,
+            'state' => ['required', 'string', Rule::in([Created::$name, Registering::$name, Ready::$name, InProgress::$name])],
         ];
     }
 }
