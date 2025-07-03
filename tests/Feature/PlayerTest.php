@@ -41,4 +41,22 @@ describe('PlayerController', function () {
             ->json()
             ->error->toBe('Cannot add players to this tournament.');
     });
+
+    it('should not allow a female player to Register to male Tournament', function () {
+        //
+        $tournament = Tournament::factory()->create(['state' => 'Registering', 'gender' => 'male']);
+        $playerData = [
+            'name' => 'Player 5',
+            'email' => 'player5@example.com',
+            'hability' => rand(1, 100),
+            'strength' => rand(1, 100),
+            'speed' => rand(1, 100),
+            'gender' => 'female',
+        ];
+        $response = $this->postJson("/api/tournaments/{$tournament->id}/players", $playerData);
+        $response->assertStatus(422);
+        expect($response->content())
+            ->json()
+            ->error->toBe('Player cannot be added to this tournament.');
+    });
 });
