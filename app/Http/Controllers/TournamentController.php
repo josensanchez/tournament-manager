@@ -36,9 +36,11 @@ class TournamentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id): void
+    public function show(Tournament $tournament): JsonResponse
     {
-        //
+        // $tournament->load(['matches', 'players']);
+
+        return response()->json($tournament);
     }
 
     /**

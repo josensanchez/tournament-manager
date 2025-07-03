@@ -22,6 +22,7 @@ test('tournament happy path', function () {
         'name' => 'Test Tournament',
         'gender' => 'male',
         'start_date' => '2025-08-01',
+        'gender' => 'female',
     ];
 
     $response = $this->postJson('/api/tournaments', $tournamentData);
@@ -43,6 +44,10 @@ test('tournament happy path', function () {
         $playerData = [
             'name' => "Player {$i}",
             'email' => "player{$i}@example.com",
+            'hability' => rand(1, 100),
+            'strength' => rand(1, 100),
+            'speed' => rand(1, 100),
+            'gender' => 'female',
         ];
         $response = $this->postJson("/api/tournaments/{$tournament->id}/players", $playerData);
         $response->assertStatus(201);
@@ -61,6 +66,10 @@ test('tournament happy path', function () {
     $playerData = [
         'name' => 'Player 5',
         'email' => 'player5@example.com',
+        'hability' => rand(1, 100),
+        'strength' => rand(1, 100),
+        'speed' => rand(1, 100),
+        'gender' => 'female',
     ];
     $response = $this->postJson("/api/tournaments/{$tournament->id}/players", $playerData);
     $response->assertStatus(403);

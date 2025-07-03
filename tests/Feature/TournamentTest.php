@@ -20,6 +20,7 @@ describe('Tournaments', function () {
             'name' => 'Test Tournament',
             'gender' => 'male',
             'start_date' => '2025-08-01',
+            'gender' => 'male',
         ];
 
         $response = $this->post('/api/tournaments', $tournamentData);

@@ -14,6 +14,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->foreignId('tournament_id');
             $table->string('state');
+            $table->string('gender');
+            $table->integer('hability');
+            $table->integer('strength');
+            $table->integer('speed');
             $table->timestamps();
         });
     }

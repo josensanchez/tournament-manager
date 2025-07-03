@@ -8,10 +8,14 @@ covers(PlayerController::class);
 describe('PlayerController', function () {
     it('should allow a player to Register to a Tournament', function () {
         //
-        $tournament = Tournament::factory()->create(['state' => 'Registering']);
+        $tournament = Tournament::factory()->create(['state' => 'Registering', 'gender' => 'female']);
         $playerData = [
             'name' => 'Player 5',
             'email' => 'player5@example.com',
+            'hability' => rand(1, 100),
+            'strength' => rand(1, 100),
+            'speed' => rand(1, 100),
+            'gender' => 'female',
         ];
         $response = $this->postJson("/api/tournaments/{$tournament->id}/players", $playerData);
         $response->assertStatus(201);
@@ -22,10 +26,14 @@ describe('PlayerController', function () {
 
     it('should not allow a player to Register to a Tournament', function () {
         //
-        $tournament = Tournament::factory()->create(['state' => 'Ready']);
+        $tournament = Tournament::factory()->create(['state' => 'Ready', 'gender' => 'female']);
         $playerData = [
             'name' => 'Player 5',
             'email' => 'player5@example.com',
+            'hability' => rand(1, 100),
+            'strength' => rand(1, 100),
+            'speed' => rand(1, 100),
+            'gender' => 'female',
         ];
         $response = $this->postJson("/api/tournaments/{$tournament->id}/players", $playerData);
         $response->assertStatus(403);

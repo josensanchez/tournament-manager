@@ -26,6 +26,9 @@ class PlayerController extends Controller
         if (! $tournament->canAddPlayers()) {
             return response()->json(['error' => 'Cannot add players to this tournament.'], 403);
         }
+        if ($tournament->gender !== $request->input('gender')) {
+            return response()->json(['error' => 'Player cannot be added to this tournament.'], 422);
+        }
         // @phpstan-ignore argument.type
         $player = $tournament->players()->create($request->all());
 

@@ -18,8 +18,9 @@ use Spatie\ModelStates\HasStates;
  * @property int $id
  * @property string $name
  * @property string $email
- * @property int|null $team_id
- * @property int|null $rank
+ * @property int $hability
+ * @property int $strength
+ * @property int $speed
  * @property Registered | Playing | Eliminated | Winner $state
  *
  * @method static \Database\Factories\PlayerFactory factory(...$parameters)
@@ -32,8 +33,10 @@ class Player extends Model implements Auditable
     protected $fillable = [
         'name',
         'email',
-        'team_id',
-        'rank',
+        'gender',
+        'hability',
+        'strength',
+        'speed',
     ];
 
     protected $casts = [
