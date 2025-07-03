@@ -3,7 +3,7 @@
         "lint": {
             "phpstan": ["./vendor/bin/phpstan", "analyse"],
             "pest": ["./vendor/bin/pest", "--parallel"],
-            "mutation": ["./vendor/bin/pest", "--mutate"]
+            "mutation": ["./vendor/bin/pest", "--mutate", "--parallel"]
         }
     },
     "processTimeout": 120
