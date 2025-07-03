@@ -40,7 +40,6 @@ class TournamentService
 
         // Transition the tournament state based on the match game state
         $activeGames = $tournament->matches()->where('stage', '=', $matchGame->stage)->get();
-        $nextStage = $activeGames->count() / 2;
 
         /** @var int $positionInArray */
         $positionInArray = array_search($matchGame->id, $activeGames->pluck('id')->toArray());

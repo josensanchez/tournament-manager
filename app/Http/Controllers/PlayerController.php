@@ -24,7 +24,7 @@ class PlayerController extends Controller
     {
         // chek if the tournament is in a state that allows players to be added
         if (! $tournament->canAddPlayers()) {
-            return response()->json(['error' => 'Cannot add players to this tournament state'], 403);
+            return response()->json(['error' => 'Cannot add players to this tournament.'], 403);
         }
         // @phpstan-ignore argument.type
         $player = $tournament->players()->create($request->all());

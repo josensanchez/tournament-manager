@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\MatchGameController;
+use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\TournamentController;
 use App\Models\States\MatchGame\Finished;
 use App\Models\States\MatchGame\InProgress as MatchGameInProgress;
 use App\Models\States\Tournament\Created;
@@ -9,7 +12,9 @@ use App\Models\States\Tournament\Registering;
 use App\Models\States\Tournament\TournamentFinished;
 use App\Models\Tournament;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+covers(TournamentController::class);
+covers(MatchGameController::class);
+covers(PlayerController::class);
 
 test('tournament happy path', function () {
     // 1. Create a tournament
@@ -51,6 +56,14 @@ test('tournament happy path', function () {
     $response->assertStatus(200);
     $tournament->refresh();
     expect($tournament->state::$name)->toEqual(Ready::$name);
+
+    // 4.1 confirm that the Registration is closed
+    $playerData = [
+        'name' => 'Player 5',
+        'email' => 'player5@example.com',
+    ];
+    $response = $this->postJson("/api/tournaments/{$tournament->id}/players", $playerData);
+    $response->assertStatus(403);
 
     // 5. Move the tournament to InProgress and Generate matches
     $response = $this->patchJson("/api/tournaments/{$tournament->id}", [
