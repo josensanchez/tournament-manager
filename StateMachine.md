@@ -126,3 +126,38 @@ stateDiagram-v2
         - One Playing Player -> Winner
     end note
 ```
+
+
+
+```mermaid
+graph TD
+    subgraph Tournament
+        T_Created[Created] --> T_Registering[Registering];
+        T_Registering --> T_Ready[Ready];
+        T_Ready --> T_InProgress[In Progress];
+        T_InProgress --> T_Finished[Finished];
+    end
+
+    subgraph Player
+        P_Registered[Registered] --> P_Playing[Playing];
+        P_Playing --> P_Eliminated[Eliminated];
+        P_Playing --> P_Winner[Winner];
+    end
+
+    subgraph MatchGame
+        M_Pending[Pending] --> M_InProgress[In Progress];
+        M_InProgress --> M_Finished[Finished];
+    end
+
+    %% Interactions
+    T_Registering -- Players register --> P_Registered;
+    T_Ready -- Tournament starts --> M_Pending;
+    M_Pending -- Match starts --> M_InProgress;
+    M_InProgress -- Match ends --> M_Finished;
+    T_InProgress -- Match finished --> P_Playing;
+    M_Finished -- Player loses --> P_Eliminated;
+    M_Finished -- Player wins --> P_Playing; %% Player continues playing if not final match
+    T_InProgress -- All matches finished --> T_Finished;
+    T_Finished -- Tournament winner --> P_Winner;
+    T_Finished -- Other players --> P_Eliminated;
+```
