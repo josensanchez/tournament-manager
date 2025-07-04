@@ -87,7 +87,7 @@ A Postman Collection is provided here [collection.json](./postman_collection.jso
 This project's architecture heavily relies on the **State Machine pattern**, 
 The main reason for this is that all entities states relies on the state of at least one or more other entities.
 
-Is a player is eliminated depends on the MatchGames and the evolution of the MatchGames changes the Tournament status.
+If a player is eliminated depends on the MatchGames and the evolution of the MatchGames changes the Tournament status.
 
 
 ```mermaid
