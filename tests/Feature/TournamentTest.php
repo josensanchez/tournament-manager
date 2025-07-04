@@ -43,7 +43,7 @@ describe('Tournaments', function () {
 
         $response = $this->patch("/api/tournaments/{$tournament->id}", ['state' => 'Ready']);
 
-        $response->assertStatus(422);
+        $response->assertStatus(403);
     });
 
     it('should not transition tournament from registering to ready if there is no enought players registered', function () {

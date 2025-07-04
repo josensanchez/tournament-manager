@@ -3,7 +3,9 @@ includes:
     - vendor/nesbot/carbon/extension.neon
 
 parameters:
-
+    typeAliases:
+        PlayerPayload: 'array{name:string,gender:string,strengh:int,hability:int,speed:int}'
+        SimulationPayload: 'array{name:string,gender:string,players:PlayerPayload[]}'
     paths:
         - app/
 

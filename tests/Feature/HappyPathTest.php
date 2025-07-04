@@ -72,7 +72,7 @@ test('tournament happy path', function () {
         'gender' => 'female',
     ];
     $response = $this->postJson("/api/tournaments/{$tournament->id}/players", $playerData);
-    $response->assertStatus(403);
+    $response->assertStatus(422);
 
     // 5. Move the tournament to InProgress and Generate matches
     $response = $this->patchJson("/api/tournaments/{$tournament->id}", [

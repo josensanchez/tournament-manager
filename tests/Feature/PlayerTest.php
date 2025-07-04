@@ -36,7 +36,7 @@ describe('PlayerController', function () {
             'gender' => 'female',
         ];
         $response = $this->postJson("/api/tournaments/{$tournament->id}/players", $playerData);
-        $response->assertStatus(403);
+        $response->assertStatus(422);
         expect($response->content())
             ->json()
             ->error->toBe('Cannot add players to this tournament.');

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePlayerRequest;
 use App\Models\Player;
 use App\Models\Tournament;
+use App\Services\PlayerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,17 +22,11 @@ class PlayerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Tournament $tournament): JsonResponse
+    public function store(PlayerService $service, CreatePlayerRequest $request, Tournament $tournament): JsonResponse
     {
-        // chek if the tournament is in a state that allows players to be added
-        if (! $tournament->canAddPlayers()) {
-            return response()->json(['error' => 'Cannot add players to this tournament.'], 403);
-        }
-        if ($tournament->gender !== $request->input('gender')) {
-            return response()->json(['error' => 'Player cannot be added to this tournament.'], 422);
-        }
-        // @phpstan-ignore argument.type
-        $player = $tournament->players()->create($request->all());
+        /** @var PlayerPayload $data */
+        $data = $request->validated();
+        $player = $service->createPlayer($data, $tournament);
 
         return response()->json($player, 201);
     }

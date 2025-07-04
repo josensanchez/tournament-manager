@@ -54,4 +54,13 @@ class Player extends Model implements Auditable
     {
         return $this->belongsTo(Tournament::class);
     }
+
+    public function stats(): int
+    {
+        if ($this->gender === 'female') {
+            return $this->hability + $this->speed;
+        }
+
+        return $this->hability + $this->strength + $this->speed;
+    }
 }

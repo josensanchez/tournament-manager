@@ -17,24 +17,23 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->dontReport([
             TransitionNotFound::class,
+            TransitionNotAllowed::class,
         ]);
         $exceptions->renderable(function (Exception $e, $request) {
             // Handle renderable exceptions
             if ($e instanceof TransitionNotFound) {
-                return response()->json(['error' => 'Transition not found'], 422);
+                return response()->json(['message' => 'Transition not found'], 403);
             }
             if ($e instanceof TransitionNotAllowed) {
                 return response()->json([
-                    'error' => 'Transition not allowed',
-                    'message' => $e->getMessage(),
+                    'message' => 'Transition not allowed',
+                    'error' => $e->getMessage(),
                 ], 422);
             }
 
-            dd($e, $e->getMessage());
-
             return response()->json([
-                'error' => 'An error occurred while processing your request',
-                'message' => $e->getMessage(),
+                'message' => 'An error occurred while processing your request',
+                'error' => $e->getMessage(),
             ], 500);
         });
     })->create();

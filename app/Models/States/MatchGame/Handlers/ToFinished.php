@@ -34,7 +34,7 @@ class ToFinished extends Transition
         }
         $this->matchGame->state = new Finished($this->matchGame);
 
-        UpdateTournamentState::dispatch($this->matchGame);
+        UpdateTournamentState::dispatchSync($this->matchGame);
 
         return $this->matchGame;
     }
