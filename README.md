@@ -150,8 +150,9 @@ The main benefit from this approach is that the entire system is divided in smal
 
 Adding new features will be adding or removing states or adding or removing transitions. 
 
-In that way every new feature does not change the behaivor of the previous ones(there are some limitation on that of course). But follow the whole journey of an 
-Entity is easy and stragth forward and every step of the way can be re tried if necesary.
+In that way every new feature does not change the behaivor of the previous 
+ones(there are some limitation on that of course). But following the whole journey of an 
+Entity is easy and straight-forward and every step of the way can be re tried if necesary.
 
 
 
