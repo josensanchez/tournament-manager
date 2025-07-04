@@ -201,7 +201,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"state\": \"Ready\"\n}",
+							"raw": "{\n    \"state\": \"In Progress\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -275,7 +275,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"state\": \"In Progress\"\n}",
+							"raw": "{\n    \"state\": \"Finished\",\n    \"score\": [\"6-2\", \"5-7\", \"6-7\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
