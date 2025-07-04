@@ -8,7 +8,6 @@ use Illuminate\Foundation\Http\FormRequest;
  * Class CreatePlayerRequest
  *
  * @property string $name
- * @property string $email
  * @property string $gender
  * @property int $hability
  * @property int $strength
@@ -33,7 +32,6 @@ class CreatePlayerRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:players,email'],
             'gender' => ['required', 'string', 'in:male,female'],
             'hability' => ['required', 'integer', 'between:1,100'],
             'strength' => ['required', 'integer', 'between:1,100'],

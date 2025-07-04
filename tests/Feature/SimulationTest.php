@@ -13,7 +13,6 @@ describe('Tournament Simulation', function () {
         for ($i = 1; $i <= 16; $i++) {
             $players[] = [
                 'name' => "Player {$i}",
-                'email' => "player{$i}@example.com",
                 'hability' => rand(1, 100),
                 'strength' => rand(1, 100),
                 'speed' => rand(1, 100),
@@ -45,7 +44,6 @@ describe('Tournament Simulation', function () {
         for ($i = 1; $i <= 16; $i++) {
             $players[] = [
                 'name' => "Player {$i}",
-                'email' => "player{$i}@example.com",
                 'hability' => rand(1, 100),
                 'strength' => rand(1, 100),
                 'speed' => rand(1, 100),
@@ -72,7 +70,6 @@ describe('Tournament Simulation', function () {
         for ($i = 1; $i <= 15; $i++) {
             $players[] = [
                 'name' => "Player {$i}",
-                'email' => "player{$i}@example.com",
                 'hability' => rand(1, 100),
                 'strength' => rand(1, 100),
                 'speed' => rand(1, 100),

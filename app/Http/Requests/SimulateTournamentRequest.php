@@ -38,7 +38,6 @@ class SimulateTournamentRequest extends FormRequest
             'end_date' => ['sometimes', 'date'],
             'players' => ['required', 'array'],
             'players.*.name' => ['required', 'string', 'max:255'],
-            'players.*.email' => ['required', 'email', 'max:255', 'unique:players,email'],
             'players.*.gender' => ['required', 'string', 'in:male,female'],
             'players.*.hability' => ['required', 'integer', 'between:1,100'],
             'players.*.strength' => ['required', 'integer', 'between:1,100'],

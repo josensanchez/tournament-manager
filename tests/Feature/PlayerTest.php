@@ -11,7 +11,6 @@ describe('PlayerController', function () {
         $tournament = Tournament::factory()->create(['state' => 'Registering', 'gender' => 'female']);
         $playerData = [
             'name' => 'Player 5',
-            'email' => 'player5@example.com',
             'hability' => rand(1, 100),
             'strength' => rand(1, 100),
             'speed' => rand(1, 100),
@@ -29,7 +28,6 @@ describe('PlayerController', function () {
         $tournament = Tournament::factory()->create(['state' => 'Ready', 'gender' => 'female']);
         $playerData = [
             'name' => 'Player 5',
-            'email' => 'player5@example.com',
             'hability' => rand(1, 100),
             'strength' => rand(1, 100),
             'speed' => rand(1, 100),
@@ -47,7 +45,6 @@ describe('PlayerController', function () {
         $tournament = Tournament::factory()->create(['state' => 'Registering', 'gender' => 'male']);
         $playerData = [
             'name' => 'Player 5',
-            'email' => 'player5@example.com',
             'hability' => rand(1, 100),
             'strength' => rand(1, 100),
             'speed' => rand(1, 100),
