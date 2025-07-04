@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\TournamentController;
+use App\Models\MatchGame;
+use App\Models\Player;
 use App\Models\Tournament;
 
 covers(TournamentController::class);
@@ -68,5 +70,26 @@ describe('Tournaments', function () {
             ->json()
             ->message->toBe('Tournament state updated successfully')
             ->data->state->toBe('Ready');
+    });
+
+    it('should show a tournament full data', function () {
+        $tournament = Tournament::factory()->create();
+        $players = Player::factory()->count(2)->create([
+            'tournament_id' => $tournament->id,
+            'gender' => $tournament->gender,
+        ]);
+        MatchGame::factory()->create([
+            'tournament_id' => $tournament->id,
+            'first_player_id' => $players[0]->id,
+            'second_player_id' => $players[1]->id,
+            'stage' => 2,
+        ]);
+
+        $response = $this->get("/api/tournaments/{$tournament->id}");
+        $response->assertOk();
+        expect($response->content())
+            ->json()
+            ->matches->toHaveCount(1)
+            ->players->toHaveCount(2);
     });
 });

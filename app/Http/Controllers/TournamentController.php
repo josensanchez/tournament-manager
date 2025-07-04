@@ -38,7 +38,7 @@ class TournamentController extends Controller
      */
     public function show(Tournament $tournament): JsonResponse
     {
-        // $tournament->load(['matches', 'players']);
+        $tournament->load(['matches', 'players']);
 
         return response()->json($tournament);
     }
