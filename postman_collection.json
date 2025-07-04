@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "e47f5be8-b8d9-4c1d-8379-1317310d4baf",
+		"name": "Tournament Manager",
+		"description": "# Tournament, MatchGame, and Player Workflows in State Machine\n\nThis document outlines the state machine workflows for Tournaments, MatchGames, and Players, including their individual transitions and their interactions.\n\n## Tournament Workflow\n\nA tournament progresses through several states, managing its lifecycle from creation to completion.\n\n```mermaid\ngraph TD\n    Created --> Registering;\n    Registering --> Ready;\n    Ready --> InProgress;\n    InProgress --> Finished;\n```\n\n- **Created**: Initial state when a tournament is first created.\n- **Registering**: Players can register for the tournament.\n- **Ready**: The tournament has enough players and is ready to start.\n- **InProgress**: Matches are being played.\n- **Finished**: All matches are completed, and the tournament has a winner.\n\n## Player Workflow\n\nPlayers also have states that reflect their participation in a tournament.\n\n```mermaid\ngraph TD\n    Registered --> Playing;\n    Playing --> Eliminated;\n    Playing --> Winner;\n```\n\n- **Registered**: A player has signed up for a tournament.\n- **Playing**: The player is actively participating in matches.\n- **Eliminated**: The player has lost a match and is out of the tournament.\n- **Winner**: The player has won the tournament.\n\n## MatchGame Workflow\n\nIndividual matches within a tournament follow their own state progression.\n\n```mermaid\ngraph TD\n    Pending --> InProgress;\n    InProgress --> Finished;\n```\n\n- **Pending**: The match has been created but not yet started.\n- **InProgress**: The match is currently being played.\n- **Finished**: The match has concluded, and a winner has been determined.\n\n## Combined Workflow: Tournament, MatchGame, and Player Interactions\n\nThis diagram illustrates how the states of Tournaments, MatchGames, and Players interact throughout a tournament's lifecycle.\n\n```mermaid\ngraph TD\n    subgraph Tournament\n        T_Created[Created] --> T_Registering[Registering];\n        T_Registering --> T_Ready[Ready];\n        T_Ready --> T_InProgress[In Progress];\n        T_InProgress --> T_Finished[Finished];\n    end\n\n    subgraph Player\n        P_Registered[Registered] --> P_Playing[Playing];\n        P_Playing --> P_Eliminated[Eliminated];\n        P_Playing --> P_Winner[Winner];\n    end\n\n    subgraph MatchGame\n        M_Pending[Pending] --> M_InProgress[In Progress];\n        M_InProgress --> M_Finished[Finished];\n    end\n\n    %% Interactions\n    T_Registering -- Players register --> P_Registered;\n    T_Ready -- Tournament starts --> M_Pending;\n    M_Pending -- Match starts --> M_InProgress;\n    M_InProgress -- Match ends --> M_Finished;\n    T_InProgress -- Match finished --> P_Playing;\n    M_Finished -- Player loses --> P_Eliminated;\n    M_Finished -- Player wins --> P_Playing; %% Player continues playing if not final match\n    T_InProgress -- All matches finished --> T_Finished;\n    T_Finished -- Tournament winner --> P_Winner;\n    T_Finished -- Other players --> P_Eliminated;\n```\n\n**Example Scenario:**\n\n1.  **Tournament Created**: A new tournament is in the `Created` state.\n2.  **Transition to Registering**: The tournament transitions to `Registering`.\n3.  **Players Register**: Players sign up, entering the `Registered` state.\n4.  **Transition to Ready**: Once the required number of players have registered, the tournament transitions to `Ready`.\n5.  **Transition to In Progress**: The tournament starts, moving to `In Progress`. At this point, `MatchGames` are generated in the `Pending` state, and all `Registered` players transition to `Playing`.\n6.  **MatchGame In Progress**: Individual `MatchGames` transition from `Pending` to `In Progress` as they are played.\n7.  **MatchGame Finished**: Upon completion, a `MatchGame` transitions to `Finished`. The losing player transitions from `Playing` to `Eliminated`. The winning player remains in `Playing` (unless it's the final match).\n8.  **Tournament Finished**: When all `MatchGames` are `Finished`, the tournament transitions to `Finished`. The final winning player transitions to `Winner`, and all other `Playing` players transition to `Eliminated`.\n",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2078014"
+	},
+	"item": [
+		{
+			"name": "Simulate Tournament",
+			"item": [
+				{
+					"name": "tournaments-sims",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Simulated Tournament\",\n    \"gender\": \"male\",\n    \"start_date\": \"2025-08-01\",\n    \"players\": [\n        {\n            \"name\": \"Player 1\",\n            \"email\": \"player1@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 66,\n            \"strength\": 59,\n            \"speed\": 43\n        },\n        {\n            \"name\": \"Player 2\",\n            \"email\": \"player2@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 24,\n            \"strength\": 99,\n            \"speed\": 71\n        },\n        {\n            \"name\": \"Player 3\",\n            \"email\": \"player3@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 60,\n            \"strength\": 29,\n            \"speed\": 85\n        },\n        {\n            \"name\": \"Player 4\",\n            \"email\": \"player4@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 75,\n            \"strength\": 37,\n            \"speed\": 76\n        },\n        {\n            \"name\": \"Player 5\",\n            \"email\": \"player5@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 66,\n            \"strength\": 51,\n            \"speed\": 89\n        },\n        {\n            \"name\": \"Player 6\",\n            \"email\": \"player6@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 44,\n            \"strength\": 43,\n            \"speed\": 51\n        },\n        {\n            \"name\": \"Player 7\",\n            \"email\": \"player7@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 18,\n            \"strength\": 60,\n            \"speed\": 71\n        },\n        {\n            \"name\": \"Player 8\",\n            \"email\": \"player8@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 10,\n            \"strength\": 68,\n            \"speed\": 92\n        },\n        {\n            \"name\": \"Player 9\",\n            \"email\": \"player9@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 48,\n            \"strength\": 70,\n            \"speed\": 81\n        },\n        {\n            \"name\": \"Player 10\",\n            \"email\": \"player10@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 67,\n            \"strength\": 36,\n            \"speed\": 48\n        },\n        {\n            \"name\": \"Player 11\",\n            \"email\": \"player11@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 45,\n            \"strength\": 64,\n            \"speed\": 1\n        },\n        {\n            \"name\": \"Player 12\",\n            \"email\": \"player12@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 15,\n            \"strength\": 52,\n            \"speed\": 58\n        },\n        {\n            \"name\": \"Player 13\",\n            \"email\": \"player13@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 19,\n            \"strength\": 35,\n            \"speed\": 4\n        },\n        {\n            \"name\": \"Player 14\",\n            \"email\": \"player14@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 46,\n            \"strength\": 52,\n            \"speed\": 46\n        },\n        {\n            \"name\": \"Player 15\",\n            \"email\": \"player15@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 1,\n            \"strength\": 19,\n            \"speed\": 15\n        },\n        {\n            \"name\": \"Player 16\",\n            \"email\": \"player16@example.com\",\n            \"gender\": \"male\",\n            \"hability\": 24,\n            \"strength\": 3,\n            \"speed\": 26\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tournaments-sims",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tournaments-sims"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Full Way",
+			"item": [
+				{
+					"name": "1. Create Tournament",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Simulated Tournament\",\n    \"gender\": \"female\",\n    \"start_date\": \"2025-08-01\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tournaments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tournaments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Tournament-Open-Registration",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"state\": \"Registering\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tournaments/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Register a player",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Player 1\",\n    \"gender\":\"female\",\n    \"hability\": 100,\n    \"strength\": 100,\n    \"speed\": 100\n}\n// Run this process at least 2^n times",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tournaments/:id/players",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":id",
+								"players"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Tournament-Close-Registration",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"state\": \"Ready\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tournaments/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Tournament-Start-competition",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"state\": \"Ready\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tournaments/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Initiate a MatchGame to be played",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"state\": \"In Progress\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tournaments/:tournament/match/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":tournament",
+								"match",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "tournament",
+									"value": "1"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. Finalize a MatchGame and register final score",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"state\": \"In Progress\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tournaments/:tournament/match/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":tournament",
+								"match",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "tournament",
+									"value": "1"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8. Show Tournament Results",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tournaments/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CheckHealth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"health"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "Show a Tournament",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/tournaments/:id",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"tournaments",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "http://localhost"
+		}
+	]
+}

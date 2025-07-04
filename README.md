@@ -38,7 +38,7 @@ To set up the project locally, follow these steps:
     -   Expected State: `Finished`
 
 you need the tournament info plus all the players that will compete:
-A Postman Collection is provided here [collection.json](./collection.json) 
+A Postman Collection is provided here [collection.json](./postman_collection.json) 
 
 Once the game is complete the tourament with all the matches and players as their end up in the competition will be provided as a response
 
