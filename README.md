@@ -1,10 +1,13 @@
 # Tournament Manager
 
-This project implements a tournament management system using state machines to define and control the lifecycle of key entities: Tournaments, Players, and Match Games. This approach ensures a robust and predictable flow for managing complex tournament dynamics.
+This project implements a tournament management system using state machines 
+to define and control the lifecycle of key entities: Tournaments, Players, and Match Games. 
+
 
 ## Purpose
 
-The core purpose of this application is to facilitate the creation, management, and progression of tournaments. It leverages a sophisticated state machine architecture to precisely track the status of:
+The core purpose of this application is to facilitate the creation, management, and progression of tournaments. 
+It leverages a sophisticated state machine architecture to precisely track the status of:
 
 *   **Tournaments:** From initial creation through registration, readiness, and active play.
 *   **Players:** Managing their journey from registration to playing, elimination, or ultimately, winning the tournament.
@@ -39,12 +42,19 @@ To set up the project locally, follow these steps:
 
 ## Architecture
 
-This project's architecture heavily relies on the **State Machine pattern**, which is a central feature offering significant benefits:
+This project's architecture heavily relies on the **State Machine pattern**, 
+The main reason for this is that all entities states relies on the state of at least one or more other entities.
 
-*   **Clarity and Predictability:** Each entity (Tournament, Player, MatchGame) has clearly defined states and transitions, making the system's behavior easy to understand and predict. This reduces the likelihood of unexpected states or invalid operations.
-*   **Robustness:** By enforcing valid transitions, the state machine prevents illegal state changes, leading to a more stable and error-resistant application.
-*   **Maintainability:** The logic for state transitions is encapsulated within the state machine, separating it from the core business logic. This modularity makes the codebase easier to maintain, debug, and extend.
-*   **Scalability:** The well-defined state transitions allow for easier integration of new features or changes to existing workflows without impacting unrelated parts of the system.
-*   **Event-Driven Flow:** State changes can trigger specific actions or events, enabling a reactive and dynamic system where different parts of the application respond appropriately to changes in entity status.
+Is a player is eliminated depends on the MatchGames and the evolution of the MatchGames changes the Tournament status.
 
-This architectural choice provides a solid foundation for managing the complex, sequential nature of tournament progression.
+to see more abount this state machine you can look at [StateMachine](./StateMachine.md)
+
+The main benefit from this approach is that the entire system is divided in small discrete components (States and Transitions)
+
+Adding new features will be adding or removing states or adding or removing transitions. 
+
+In that way every new feature does not change the behaivor of the previous ones(there are some limitation on that of course). But follow the whole journey of an 
+Entity is easy and stragth forward and every step of the way can be re tried if necesary.
+
+
+

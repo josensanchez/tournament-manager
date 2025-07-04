@@ -70,11 +70,15 @@ stateDiagram-v2
 
 This section describes the interaction between the `Tournament`, `Player`, and `MatchGame` state machines based on the example scenario:
 
-1.  **Tournament Creation and Registration:** A tournament is `Created` and then transitions to `Registering`. At this point, `Player` entities can register, moving to the `Registered` state.
-2.  **Tournament Ready:** Once the required number of players have `Registered`, the `Tournament` transitions from `Registering` to `Ready`.
-3.  **Tournament Start and Match Creation:** The `Tournament` then transitions from `Ready` to `InProgress`. Simultaneously, `MatchGame` entities are created in the `Pending` state, and all `Registered` players transition to the `Playing` state.
-4.  **Match Progression:** Individual `MatchGame` entities move from `Pending` to `InProgress` as they are played, and finally to `Finished` upon completion.
-5.  **Tournament Conclusion and Player Status Update:** As `MatchGame` entities `Finished`, players in the `Playing` state are either `Eliminated` (if they lose) or continue `Playing`. Once all matches are `Finished` and a tournament winner is determined, all remaining `Playing` players transition to `Eliminated`, except for one player who transitions to `Winner`.
+1.  **Tournament Created**: A new tournament is in the `Created` state.
+2.  **Transition to Registering**: The tournament transitions to `Registering`.
+3.  **Players Register**: Players sign up, entering the `Registered` state.
+4.  **Transition to Ready**: Once the required number of players have registered, the tournament transitions to `Ready`.
+5.  **Transition to In Progress**: The tournament starts, moving to `In Progress`. At this point, `MatchGames` are generated in the `Pending` state, and all `Registered` players transition to `Playing`.
+6.  **MatchGame In Progress**: Individual `MatchGames` transition from `Pending` to `In Progress` as they are played.
+7.  **MatchGame Finished**: Upon completion, a `MatchGame` transitions to `Finished`. The losing player transitions from `Playing` to `Eliminated`. The winning player remains in `Playing` (unless it's the final match).
+8.  **Tournament Finished**: When all `MatchGames` are `Finished`, the tournament transitions to `Finished`. The final winning player transitions to `Winner`, and all other `Playing` players transition to `Eliminated`.
+
 
 ```mermaid
 stateDiagram-v2
@@ -83,10 +87,13 @@ stateDiagram-v2
         T_Registering: Registering
         T_Ready: Ready
         T_InProgress: InProgress
+        T_Finished: Finished
+
 
         T_Created --> T_Registering: Open for registration
         T_Registering --> T_Ready: Players registered
         T_Ready --> T_InProgress: Tournament starts
+        T_InProgress --> T_Finished: Tournament ends
     }
 
     state "Player" as Player {
@@ -127,37 +134,3 @@ stateDiagram-v2
     end note
 ```
 
-
-
-```mermaid
-graph TD
-    subgraph Tournament
-        T_Created[Created] --> T_Registering[Registering];
-        T_Registering --> T_Ready[Ready];
-        T_Ready --> T_InProgress[In Progress];
-        T_InProgress --> T_Finished[Finished];
-    end
-
-    subgraph Player
-        P_Registered[Registered] --> P_Playing[Playing];
-        P_Playing --> P_Eliminated[Eliminated];
-        P_Playing --> P_Winner[Winner];
-    end
-
-    subgraph MatchGame
-        M_Pending[Pending] --> M_InProgress[In Progress];
-        M_InProgress --> M_Finished[Finished];
-    end
-
-    %% Interactions
-    T_Registering -- Players register --> P_Registered;
-    T_Ready -- Tournament starts --> M_Pending;
-    M_Pending -- Match starts --> M_InProgress;
-    M_InProgress -- Match ends --> M_Finished;
-    T_InProgress -- Match finished --> P_Playing;
-    M_Finished -- Player loses --> P_Eliminated;
-    M_Finished -- Player wins --> P_Playing; %% Player continues playing if not final match
-    T_InProgress -- All matches finished --> T_Finished;
-    T_Finished -- Tournament winner --> P_Winner;
-    T_Finished -- Other players --> P_Eliminated;
-```
