@@ -57,6 +57,6 @@ describe('PlayerController', function () {
         $response->assertStatus(422);
         expect($response->content())
             ->json()
-            ->error->toBe('Player cannot be added to this tournament.');
+            ->error->toBe('Player `Player 5` (female) cannot be added to this tournament (male).');
     });
 });

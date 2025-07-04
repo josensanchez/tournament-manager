@@ -10,9 +10,14 @@ use App\Models\States\Tournament\Ready;
 use App\Models\States\Tournament\Registering;
 use App\Models\Tournament;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class SimulateService
 {
+    protected Tournament $tournament;
+    /** @var SimulationPayload */
+    protected array $data;
+
     public function __construct(
         protected TournamentService $tournamentService,
         protected MatchGameService $matchGameService,
@@ -26,20 +31,57 @@ class SimulateService
      */
     public function simulateTournament(array $data): Tournament
     {
-        $tournament = Tournament::create($data);
 
-        $this->tournamentService->transitionTo(Registering::class, $tournament);
-        foreach ($data['players'] as $playerData) {
-            $this->playerService->createPlayer($playerData, $tournament);
+        DB::beginTransaction();
+        try {
+            $tournament = $this
+                ->createTournament($data)
+                ->registerPlayers()
+                ->playAllMatches()
+                ->getTournament();
+
+            DB::commit();
+
+            return $tournament;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
-        $this->tournamentService->transitionTo(Ready::class, $tournament);
-        $this->tournamentService->transitionTo(InProgress::class, $tournament);
+    }
 
-        $tournamentStage = count($data['players']);
+    /**
+     *Create the tournament
+     *
+     * @param  SimulationPayload  $data
+     */
+    protected function createTournament(array $data): self
+    {
+        $this->data = $data;
+        $this->tournament = Tournament::create($data);
+
+        return $this;
+    }
+
+    protected function registerPlayers(): self
+    {
+        $this->tournamentService->transitionTo(Registering::class, $this->tournament);
+        foreach ($this->data['players'] as $playerData) {
+            $this->playerService->createPlayer($playerData, $this->tournament);
+        }
+        $this->tournamentService->transitionTo(Ready::class, $this->tournament);
+
+        return $this;
+    }
+
+    protected function playAllMatches(): self
+    {
+        $this->tournamentService->transitionTo(InProgress::class, $this->tournament);
+
+        $tournamentStage = count($this->data['players']);
 
         while ($tournamentStage > 1) {
-            $tournament->refresh();
-            $activeGames = $tournament->matches()->where('stage', '=', $tournamentStage)->get();
+            $this->tournament->refresh();
+            $activeGames = $this->tournament->matches()->where('stage', '=', $tournamentStage)->get();
 
             foreach ($activeGames as $match) {
                 // Simulate match logic here, e.g., randomly determine a winner
@@ -52,10 +94,15 @@ class SimulateService
             $tournamentStage /= 2;
         }
 
-        $tournament->refresh();
-        $tournament->load('matches', 'players');
+        return $this;
+    }
 
-        return $tournament;
+    protected function getTournament(): Tournament
+    {
+        $this->tournament->refresh();
+        $this->tournament->load('matches', 'players');
+
+        return $this->tournament;
     }
 
     /**

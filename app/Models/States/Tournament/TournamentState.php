@@ -4,6 +4,7 @@ namespace App\Models\States\Tournament;
 
 use App\Models\States\Tournament\Handlers\ToInProgress;
 use App\Models\States\Tournament\Handlers\ToReady;
+use App\Models\States\Tournament\Handlers\ToTournamentFinished;
 use App\Models\Tournament;
 use Spatie\ModelStates\State;
 use Spatie\ModelStates\StateConfig;
@@ -20,6 +21,6 @@ abstract class TournamentState extends State
             ->allowTransition(Created::class, Registering::class)
             ->allowTransition(Registering::class, Ready::class, ToReady::class)
             ->allowTransition(Ready::class, InProgress::class, ToInProgress::class)
-            ->allowTransition(InProgress::class, TournamentFinished::class);
+            ->allowTransition(InProgress::class, TournamentFinished::class, ToTournamentFinished::class);
     }
 }

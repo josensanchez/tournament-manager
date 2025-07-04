@@ -22,7 +22,7 @@ class PlayerService
             throw new TransitionNotAllowed('Cannot add players to this tournament.');
         }
         if ($tournament->gender !== $data['gender']) {
-            throw new TransitionNotAllowed('Player cannot be added to this tournament.');
+            throw new TransitionNotAllowed("Player `{$data['name']}` ({$data['gender']}) cannot be added to this tournament ({$tournament->gender}).");
         }
         $player = $tournament->players()->create($data);
 
