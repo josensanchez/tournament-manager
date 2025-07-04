@@ -29,22 +29,24 @@ To set up the project locally, follow these steps:
     php artisan install:pre-commit
     ```
 
-## How to Play the simulated game
+## How to Play the game
 
 ### Simplest way
 
-1.  **Create a Tournament**: A new tournament is created with basic details (name, gender, start date).
+1.  **Create a Tournament**: A new tournament is created with basic details (name, gender, start date, players).
     -   API Endpoint: `POST /api/tournaments-sims`
     -   Expected State: `Finished`
 
-you need the tournament info plus all the players that will compete:
 A Postman Collection is provided here [collection.json](./postman_collection.json) 
+so that you can see the payload required
 
-Once the game is complete the tourament with all the matches and players as their end up in the competition will be provided as a response
+Once the game is complete the tourament with all the matches and players as their end up in the competition,
+the response will be the tournament results with all players and matchegames played.
 
 ### Full way
 
-This section describes the full lifecycle of a tournament, mirroring the steps in the `HappyPathTest.php`.
+This section describes the full lifecycle of a tournament:
+A Postman Collection is provided here [collection.json](./postman_collection.json) 
 
 1.  **Create a Tournament**: A new tournament is created with basic details (name, gender, start date).
     -   API Endpoint: `POST /api/tournaments`
@@ -86,6 +88,61 @@ This project's architecture heavily relies on the **State Machine pattern**,
 The main reason for this is that all entities states relies on the state of at least one or more other entities.
 
 Is a player is eliminated depends on the MatchGames and the evolution of the MatchGames changes the Tournament status.
+
+
+```mermaid
+stateDiagram-v2
+    state "Tournament" as Tournament {
+        T_Created: Created
+        T_Registering: Registering
+        T_Ready: Ready
+        T_InProgress: InProgress
+        T_Finished: Finished
+
+
+        T_Created --> T_Registering: Open for registration
+        T_Registering --> T_Ready: Players registered
+        T_Ready --> T_InProgress: Tournament starts
+        T_InProgress --> T_Finished: Tournament ends
+    }
+
+    state "Player" as Player {
+        P_Registered: Registered
+        P_Playing: Playing
+        P_Eliminated: Eliminated
+        P_Winner: Winner
+
+        P_Registered --> P_Playing: Tournament starts
+        P_Playing --> P_Eliminated: Loses match
+        P_Playing --> P_Winner: Wins tournament
+    }
+
+    state "MatchGame" as MatchGame {
+        M_Pending: Pending
+        M_InProgress: InProgress
+        M_Finished: Finished
+
+        M_Pending --> M_InProgress: Match starts
+        M_InProgress --> M_Finished: Match ends
+    }
+
+    T_Registering --> P_Registered: Player registers
+    T_InProgress --> M_Pending: Matches created
+    M_Finished --> P_Eliminated: Player eliminated
+    M_Finished --> P_Winner: Player wins
+
+    note right of T_InProgress
+        When Tournament is InProgress:
+        - Players are Playing
+        - MatchGames are Pending/InProgress/Finished
+    end note
+
+    note right of M_Finished
+        After all MatchGames are Finished:
+        - All Playing Players -> Eliminated
+        - One Playing Player -> Winner
+    end note
+```
 
 to see more abount this state machine you can look at [StateMachine](./StateMachine.md)
 
