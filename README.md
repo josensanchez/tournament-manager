@@ -33,7 +33,7 @@ To set up the project locally, follow these steps:
 
 ### Simplest way
 
-1.  **Create a Tournament**: A new tournament is created with basic details (name, gender, start date, players).
+1.  **Simulate a Tournament**: A new tournament is created with basic details (name, gender, start date, players).
     -   API Endpoint: `POST /api/tournaments-sims`
     -   Expected State: `Finished`
 
