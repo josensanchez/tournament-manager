@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\TournamentSimulationController;
+
+covers(TournamentSimulationController::class);
+
 test('simulate a tournament', function () {
     // 1. generate 16 players
     $players = [];
