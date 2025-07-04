@@ -17,7 +17,6 @@ use Spatie\ModelStates\HasStates;
 /**
  * @property int $id
  * @property string $name
- * @property string $email
  * @property int $hability
  * @property int $strength
  * @property int $speed
@@ -32,7 +31,6 @@ class Player extends Model implements Auditable
 
     protected $fillable = [
         'name',
-        'email',
         'gender',
         'hability',
         'strength',
