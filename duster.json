@@ -1,7 +1,7 @@
 {
     "scripts": {
         "lint": {
-            "phpstan": ["./vendor/bin/phpstan", "analyse"],
+            "larastan": ["./vendor/bin/phpstan", "analyse"],
             "pest": ["./vendor/bin/pest", "--parallel"],
             "mutation": ["./vendor/bin/pest", "--mutate", "--parallel"]
         }

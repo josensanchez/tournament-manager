@@ -34,4 +34,4 @@ jobs:
       - name: "Duster Lint"
         uses: tighten/duster-action@v3
         with:
-          args: lint
+          args: lint --using="tlint,pint,phpcs,larastan"
